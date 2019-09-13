@@ -23,7 +23,7 @@ class PasswordField: UIControl {
     private var secureEntry: Bool = true
     
     private let standardMargin: CGFloat = 8.0
-    private let textFieldContainerHeight: CGFloat = 50.0
+    private let textFieldContainerHeight: CGFloat = 40.0
     private let textFieldMargin: CGFloat = 6.0
     private let colorViewSize: CGSize = CGSize(width: 60.0, height: 5.0)
     
@@ -106,7 +106,7 @@ class PasswordField: UIControl {
         weakView.translatesAutoresizingMaskIntoConstraints = false
         weakView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
         weakView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: standardMargin).isActive = true
-        weakView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -standardMargin).isActive = true
+        //weakView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -standardMargin).isActive = true
         weakView.heightAnchor.constraint(equalToConstant: colorViewSize.height).isActive = true
         weakView.widthAnchor.constraint(equalToConstant: colorViewSize.width).isActive = true
         weakView.backgroundColor = weakColor
@@ -118,7 +118,7 @@ class PasswordField: UIControl {
         mediumView.translatesAutoresizingMaskIntoConstraints = false
         mediumView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
         mediumView.leadingAnchor.constraint(equalTo: weakView.trailingAnchor, constant: standardMargin).isActive = true
-        mediumView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -standardMargin).isActive = true
+        //mediumView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -standardMargin).isActive = true
         mediumView.heightAnchor.constraint(equalToConstant: colorViewSize.height).isActive = true
         mediumView.widthAnchor.constraint(equalToConstant: colorViewSize.width).isActive = true
         mediumView.layer.cornerRadius = CornerRadius
@@ -129,7 +129,7 @@ class PasswordField: UIControl {
         strongView.translatesAutoresizingMaskIntoConstraints = false
         strongView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
         strongView.leadingAnchor.constraint(equalTo: mediumView.trailingAnchor, constant: standardMargin).isActive = true
-        strongView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -standardMargin).isActive = true
+        //strongView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -standardMargin).isActive = true
         strongView.heightAnchor.constraint(equalToConstant: colorViewSize.height).isActive = true
         strongView.widthAnchor.constraint(equalToConstant: colorViewSize.width).isActive = true
         strongView.layer.cornerRadius = CornerRadius
@@ -142,10 +142,12 @@ class PasswordField: UIControl {
         strengthDescriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -standardMargin).isActive = true
         strengthDescriptionLabel.leadingAnchor.constraint(equalTo: strongView.trailingAnchor, constant: standardMargin).isActive = true
         strengthDescriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -standardMargin).isActive = true
-        strengthDescriptionLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor)
+        //strengthDescriptionLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor).isActive = true
         strengthDescriptionLabel.font = labelFont
         strengthDescriptionLabel.textColor = labelTextColor
         strengthDescriptionLabel.text = self.strength.rawValue
+        
+        bottomAnchor.constraint(equalTo: strengthDescriptionLabel.bottomAnchor, constant: standardMargin)
     }
     
     @objc private func changeHideShow() {
