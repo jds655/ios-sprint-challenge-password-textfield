@@ -72,29 +72,31 @@ class PasswordField: UIControl {
         titleLabel.textColor = labelTextColor
         titleLabel.text = "Please enter password:"
         
+        //Setup Show/Hide button
+        //textField.addSubview(showHideButton)
+        addSubview(showHideButton)
+        showHideButton.translatesAutoresizingMaskIntoConstraints = false
+        showHideButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: textFieldMargin).isActive = true
+        showHideButton.leadingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 0)
+        showHideButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: standardMargin).isActive = true
+        showHideButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+        showHideButton.adjustsImageWhenHighlighted = true
+        showHideButton.setImage(UIImage(named: "eyes-closed"), for: .normal)
+        showHideButton.setImage(UIImage(named: "eyes-open"), for: .selected)
+        showHideButton.isEnabled = true
+        showHideButton.addTarget(self, action: #selector(changeHideShow), for: .touchUpInside)
+        
         //Setup Text Field
         addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: textFieldMargin).isActive = true
         textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: textFieldMargin).isActive = true
-        textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: textFieldMargin).isActive = true
+        textField.trailingAnchor.constraint(equalTo: showHideButton.leadingAnchor, constant: textFieldMargin).isActive = true
         textField.heightAnchor.constraint(equalToConstant: textFieldContainerHeight)
         textField.layer.borderColor = textFieldBorderColor.cgColor
         textField.isSecureTextEntry = secureEntry
         textField.placeholder = "Enter Password Here"
         textField.delegate = self
-        
-        //Setup Show/Hide button
-        textField.addSubview(showHideButton)
-        showHideButton.translatesAutoresizingMaskIntoConstraints = false
-        showHideButton.topAnchor.constraint(equalTo: textField.topAnchor, constant: 0).isActive = true
-        showHideButton.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 0).isActive = true
-        showHideButton.bottomAnchor.constraint(equalTo: textField.bottomAnchor, constant: 0).isActive = true
-        showHideButton.adjustsImageWhenHighlighted = true
-        showHideButton.setImage(UIImage(named: "eyes-closed"), for: .normal)
-        //showHideButton.setImage(UIImage(named: "eyes-open"), for: .selected)
-        showHideButton.isEnabled = true
-        showHideButton.addTarget(self, action: #selector(changeHideShow), for: .touchUpInside)
         
         //Setup WeakView
         addSubview(weakView)
