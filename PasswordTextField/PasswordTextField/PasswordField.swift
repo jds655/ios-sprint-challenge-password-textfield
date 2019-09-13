@@ -60,7 +60,7 @@ class PasswordField: UIControl {
     
     func setup() {
         // Lay out your subviews here
-        backgroundColor = bgColor
+        layer.cornerRadius = 5
         
         //Setup Title Label
         addSubview(titleLabel)
@@ -95,6 +95,7 @@ class PasswordField: UIControl {
         textField.heightAnchor.constraint(equalToConstant: textFieldContainerHeight)
         textField.layer.borderColor = textFieldBorderColor.cgColor
         textField.isSecureTextEntry = secureEntry
+        textField.backgroundColor = bgColor
         textField.placeholder = "Enter Password Here"
         textField.delegate = self
         
@@ -150,7 +151,7 @@ class PasswordField: UIControl {
         } else {
             showHideButton.setImage(UIImage(named: "eyes-open"), for: .normal)
         }
-        textField.isSecureTextEntry = secureEntry
+        textField.togglePasswordVisibility()
     }
     
     private func updateStrength (with strength: passwordStrength) {
@@ -212,5 +213,30 @@ extension UIView {
         UIView.animate(withDuration: 0.3,
                        animations: { flare() },
                        completion: { _ in UIView.animate(withDuration: 0.1) { unflare() }})
+    }
+}
+
+extension UITextField {
+    func togglePasswordVisibility() {
+        isSecureTextEntry = !isSecureTextEntry
+        
+        if let existingText = text, isSecureTextEntry {
+            /* When toggling to secure text, all text will be purged if the user
+             continues typing unless we intervene. This is prevented by first
+             deleting the existing text and then recovering the original text. */
+            deleteBackward()
+            
+            if let _/*textRange*/ = textRange(from: beginningOfDocument, to: endOfDocument) {
+                //replace(textRange, withText: existingText)
+                text = existingText
+            }
+        }
+        
+        /* Reset the selected text range since the cursor can end up in the wrong
+         position after a toggle because the text might vary in width */
+        if let existingSelectedTextRange = selectedTextRange {
+            selectedTextRange = nil
+            selectedTextRange = existingSelectedTextRange
+        }
     }
 }
