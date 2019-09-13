@@ -8,10 +8,19 @@
 
 import UIKit
 
+enum passwordStrength {
+    case weak
+    case medium
+    case strong
+}
+
+@IBDesignable
 class PasswordField: UIControl {
     
     // Public API - these properties are used to fetch the final password and strength values
     private (set) var password: String = ""
+    private (set) var strength: passwordStrength = .weak
+    private var secureEntry: Bool = true
     
     private let standardMargin: CGFloat = 8.0
     private let textFieldContainerHeight: CGFloat = 50.0
@@ -40,15 +49,60 @@ class PasswordField: UIControl {
     
     func setup() {
         // Lay out your subviews here
+        backgroundColor = bgColor
         
+        //Setup Title Label
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: standardMargin).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: standardMargin).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: standardMargin).isActive = true
+        titleLabel.font = labelFont
+        titleLabel.textColor = labelTextColor
+        titleLabel.text = "Please enter password:"
+        
+        //Setup Text Field
+        addSubview(textField)
+        textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: textFieldMargin).isActive = true
+        textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: textFieldMargin).isActive = true
+        textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: textFieldMargin).isActive = true
+        textField.heightAnchor.constraint(equalToConstant: textFieldContainerHeight)
+        textField.layer.borderColor = textFieldBorderColor.cgColor
+        textField.isSecureTextEntry = secureEntry
+        textField.placeholder = "Enter Password Here"
+        
+        //Setup Show/Hide button
+        textField.addSubview(showHideButton)
+        showHideButton.topAnchor.constraint(equalTo: textField.topAnchor, constant: 0).isActive = true
+        showHideButton.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 0).isActive = true
+        showHideButton.bottomAnchor.constraint(equalTo: textField.bottomAnchor, constant: 0).isActive = true
+        showHideButton.adjustsImageWhenHighlighted = true
+        showHideButton.setImage(UIImage(named: "eyes-closed"), for: .normal)
+        showHideButton.setImage(UIImage(named: "eyes-open"), for: .selected)
+        
+        //Setup WeakView
+        addSubview(weakView)
+        weakView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: standardMargin).isActive = true
+        weakView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: standardMargin)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
+    
+    private func determineStrength(with password: String) -> passwordStrength {
+        let length = password.count
+        switch length {
+        case 0...9:
+            return .weak
+        case 10...19:
+            return .medium
+        default:
+            return .strong
+        }
+    }
+    
 }
 
 extension PasswordField: UITextFieldDelegate {
@@ -57,6 +111,7 @@ extension PasswordField: UITextFieldDelegate {
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
         // TODO: send new text to the determine strength method
+        let _ = determineStrength(with: newText)
         return true
     }
 }
