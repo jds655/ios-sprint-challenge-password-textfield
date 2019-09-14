@@ -8,8 +8,10 @@
 
 import UIKit
 
+@IBDesignable
 class ViewController: UIViewController {
     
+    @IBOutlet weak var passwordField: PasswordField!
     // For use in the stretch goal
     //
     // Uncomment this entire method, then run the app.
@@ -19,12 +21,24 @@ class ViewController: UIViewController {
     // the little cloud download button to install it. Then just stop the app
     // and comment this method out again. This step only needs to run once.
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//
-//        // Uncomment this portion to set up the dictionary
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        passwordField.bgColor = UIColor(red: 104/255, green: 0/255, blue: 178/255, alpha: 1.0)
+        passwordField.delegate = self
+        // Uncomment this portion to set up the dictionary
 //        let str = "lambda"
 //        let referenceVC = UIReferenceLibraryViewController(term: str)
 //        present(referenceVC, animated: true, completion: nil)
-//    }
+    }
+}
+
+extension ViewController:PasswordFieldDelegate {
+    func passwordEntered() {
+        let alert = UIAlertController(title: "Thank you", message: "PAssword entered and accepted.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ok", style: .default, handler: { (UIAlertAction) in
+            self.passwordField.isHidden = true
+        })
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
 }

@@ -8,18 +8,30 @@
 
 import UIKit
 
-enum passwordStrength: String {
+enum PasswordStrength: String {
     case weak = "Too Weak"
     case medium = "Could Be Stronger"
     case strong = "Strong Password"
 }
 
-//@IBDesignable
+protocol PasswordFieldDelegate {
+    func passwordEntered ()
+}
+
+@IBDesignable
 class PasswordField: UIControl {
     
-    // Public API - these properties are used to fetch the final password and strength values
+    var delegate: PasswordFieldDelegate?
+    var bgColor: UIColor? {
+        didSet{
+            backgroundColor = bgColor
+            setNeedsDisplay()
+        }
+    }
+    
+    // Private API - these properties are used to fetch the final password and strength values
     private (set) var password: String = ""
-    private (set) var strength: passwordStrength = .weak
+    private (set) var strength: PasswordStrength = .weak
     private var secureEntry: Bool = true
     
     private let standardMargin: CGFloat = 8.0
@@ -31,7 +43,7 @@ class PasswordField: UIControl {
     private let labelFont = UIFont.systemFont(ofSize: 14.0, weight: .semibold)
     
     private let textFieldBorderColor = UIColor(hue: 208/360.0, saturation: 80/100.0, brightness: 94/100.0, alpha: 1)
-    private let bgColor = UIColor(hue: 0, saturation: 0, brightness: 97/100.0, alpha: 1)
+    private let textFieldBackgroundColor = UIColor(hue: 0, saturation: 0, brightness: 97/100.0, alpha: 1)
     
     // States of the password strength indicators
     private let unusedColor = UIColor(hue: 210/360.0, saturation: 5/100.0, brightness: 86/100.0, alpha: 1)
@@ -96,7 +108,7 @@ class PasswordField: UIControl {
         textField.layer.borderColor = textFieldBorderColor.cgColor
         textField.layer.borderWidth = 2
         textField.isSecureTextEntry = secureEntry
-        textField.backgroundColor = bgColor
+        textField.backgroundColor = textFieldBackgroundColor
         textField.placeholder = "Enter Password Here"
         textField.layer.cornerRadius = 5
         textField.delegate = self
@@ -160,7 +172,7 @@ class PasswordField: UIControl {
         textField.togglePasswordVisibility()
     }
     
-    private func updateStrength (with strength: passwordStrength) {
+    private func updateStrength (with strength: PasswordStrength) {
         if self.strength != strength {
             strengthDescriptionLabel.text = strength.rawValue
             switch strength {
@@ -186,7 +198,7 @@ class PasswordField: UIControl {
     
     private func determineStrength(with password: String) {
         let length = password.count
-        var result: passwordStrength
+        var result: PasswordStrength
         switch length {
         case 0...9:
             result = .weak
@@ -207,6 +219,18 @@ extension PasswordField: UITextFieldDelegate {
         // TODO: send new text to the determine strength method
         determineStrength(with: newText)
         return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch self.strength {
+        case .strong:
+            if let delegate = delegate {
+                delegate.passwordEntered()
+            }
+            return true
+        default:
+            return false
+        }
     }
 }
 
