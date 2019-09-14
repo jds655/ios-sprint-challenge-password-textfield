@@ -15,7 +15,8 @@ enum PasswordStrength: String {
 }
 
 protocol PasswordFieldDelegate {
-    func passwordEntered ()
+    func passwordSucceeded ()
+    func passwordFailed()
 }
 
 @IBDesignable
@@ -229,6 +230,9 @@ extension PasswordField: UITextFieldDelegate {
             }
             return true
         default:
+            if let delegate = delegate {
+                delegate.passwordFailed()
+            }
             return false
         }
     }

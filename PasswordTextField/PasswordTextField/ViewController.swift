@@ -33,12 +33,23 @@ class ViewController: UIViewController {
 }
 
 extension ViewController:PasswordFieldDelegate {
-    func passwordEntered() {
-        let alert = UIAlertController(title: "Thank you", message: "PAssword entered and accepted.", preferredStyle: .alert)
+    func passwordFailed() {
+        let alert = UIAlertController(title: "Error", message: "Password needs to be stronger.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+
+    }
+    
+    func passwordSucceeded() {
+        let alert = UIAlertController(title: "Thank you", message: "Password entered and accepted.", preferredStyle: .alert)
         let action = UIAlertAction(title: "Ok", style: .default, handler: { (UIAlertAction) in
             self.passwordField.isHidden = true
         })
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
     }
+    
+    
+    
 }
