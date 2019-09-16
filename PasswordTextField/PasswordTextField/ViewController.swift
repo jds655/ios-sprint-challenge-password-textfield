@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        passwordField.bgColor = UIColor(red: 104/255, green: 0/255, blue: 178/255, alpha: 1.0)
+        passwordField.bgColor = UIColor(red: 88.0/255.0, green: 111.0/255.0, blue: 203.0/255.0, alpha: 1.0)
         passwordField.delegate = self
         // Uncomment this portion to set up the dictionary
 //        let str = "lambda"
@@ -49,7 +49,4 @@ extension ViewController:PasswordFieldDelegate {
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
     }
-    
-    
-    
 }

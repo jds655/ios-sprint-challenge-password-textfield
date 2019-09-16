@@ -197,10 +197,21 @@ class PasswordField: UIControl {
         }
     }
     
+    private func countSpecialChars(within: String) -> Int {
+        let specChars: String = "!@#$%^&*()-_=+`~;:<>?/.,\\|[]{}1234567890"
+        var specCount: Int = 0
+        for char in specChars {
+            if within.contains(char) { specCount += 1}
+        }
+        //print (specCount)
+        return specCount
+    }
+    
     private func determineStrength(with password: String) {
         let length = password.count
+        let specCount = countSpecialChars(within: password)
         var result: PasswordStrength
-        switch length {
+        switch length + (specCount * 2){
         case 0...9:
             result = .weak
         case 10...19:
@@ -218,6 +229,7 @@ extension PasswordField: UITextFieldDelegate {
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
         // TODO: send new text to the determine strength method
+        //print (newText)
         determineStrength(with: newText)
         return true
     }
@@ -226,7 +238,7 @@ extension PasswordField: UITextFieldDelegate {
         switch self.strength {
         case .strong:
             if let delegate = delegate {
-                delegate.passwordEntered()
+                delegate.passwordSucceeded()
             }
             return true
         default:
